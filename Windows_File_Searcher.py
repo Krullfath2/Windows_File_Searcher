@@ -3,7 +3,6 @@ import shutil
 import pathlib
 from datetime import datetime
 import time
-from multiprocessing import Pool, cpu_count
 
 def get_recent_folders(common_folders):
     print("Getting recent folders...")
@@ -21,8 +20,7 @@ def get_pinned_folders(common_folders):
         pinned_folders = [file for file in pinned_path.iterdir() if file.is_file() and not any(str(common_folder) in str(file.parents[0]) for common_folder in common_folders)]
     return pinned_folders
 
-def process_file(args):
-    file, keywords, found_files_keyword, log_file_path, allowed_extensions, max_file_size = args
+def process_file(file, keywords, found_files_keyword, log_file_path, allowed_extensions, max_file_size):
     duplicated_count = 0
 
     file_name_lower = file.name.lower()
@@ -132,18 +130,15 @@ max_file_size:"1GB"
         *get_pinned_folders(common_folders)
     ]
 
-    # Initialize the pool
-    pool = Pool(cpu_count())
-
     log_file_path = duplicate_logs_folder / "duplicate_log.txt"
     with open(log_file_path, "w") as log_file:
-        args = [(file, search_keywords, found_files_keyword, log_file_path, allowed_file_extensions, max_file_size) for folder in search_folders for file in folder.glob("**/*") if file.is_file()]
-        duplicated_counts = pool.map(process_file, args)
+        duplicated_counts = 0
+        for folder in search_folders:
+            for file in folder.glob("**/*"):
+                if file.is_file():
+                    duplicated_counts += process_file(file, search_keywords, found_files_keyword, log_file_path, allowed_file_extensions, max_file_size)
 
-    pool.close()
-    pool.join()
-
-    total_duplicated_files = sum(duplicated_counts)
+    total_duplicated_files = duplicated_counts
 
     print(f"Duplicated {total_duplicated_files} files successfully.")
     end_time = time.time()
