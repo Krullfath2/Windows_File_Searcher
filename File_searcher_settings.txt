@@ -1,0 +1,8 @@
+search_keywords:"example_keyword_1","example_keyword_2"
+allowed_file_extensions:".txt",".png"
+max_file_size:"1GB"
+
+# Explanation on how to modify these settings without causing issues:
+# To modify keywords, add or remove them within the double quotes separated by commas.
+# To modify allowed file extensions, add or remove them within the double quotes separated by commas.
+# To modify the maximum file size, change the value (e.g., "3GB", "500MB", "100KB") or type "disabled" to disable the size check.
