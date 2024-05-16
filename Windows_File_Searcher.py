@@ -4,12 +4,12 @@ import pathlib
 from datetime import datetime
 import time
 import subprocess
-import ctypes
+# import ctypes (Remove hashtag if you uncomment the minimize_console() function)
 
 
 class FileSearcher:
     def __init__(self):
-        # self.minimize_console()
+        # self.minimize_console() (Remove hashtag to call  minimize_console() function)
         self.load_settings()
 
     '''
